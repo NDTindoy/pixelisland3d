@@ -75,16 +75,25 @@ export const isEmailAuthorized = (email) => {
 };
 
 // Sign in with Google
-export const signInWithGoogle = async () => {
+export const signInWithGoogle = async (customEmail = null) => {
   if (!isFirebaseConfigured || !auth) {
-    // Demo Mock Login for initial testing before Firebase credentials are pasted
+    let chosenEmail = customEmail;
+    if (!chosenEmail) {
+      chosenEmail = window.prompt(
+        'Firebase keys not set yet. Enter your Google email to test login (e.g. tindoynilo@gmail.com):',
+        'tindoynilo@gmail.com'
+      );
+    }
+    if (!chosenEmail) return null; // Cancelled
+    
     const mockUser = {
-      uid: 'demo_admin_123',
-      displayName: 'Demo Admin',
-      email: getWhitelistedEmails()[0] || 'admin@pixelisland3d.com',
+      uid: `demo_${Date.now()}`,
+      displayName: chosenEmail.split('@')[0],
+      email: chosenEmail.trim(),
       photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
     };
     localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
+    window.dispatchEvent(new Event('storage'));
     return mockUser;
   }
   const result = await signInWithPopup(auth, googleProvider);
