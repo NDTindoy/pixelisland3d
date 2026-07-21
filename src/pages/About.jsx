@@ -1,8 +1,20 @@
-import { ArrowRight, Trophy, Globe, Ruler, Heart, User, CheckCircle } from 'lucide-react';
+import { ArrowRight, Trophy, Globe, Ruler, Heart, User, CheckCircle, Maximize2 } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
+import ImageLightbox from '../components/ImageLightbox';
 
 const About = () => {
+  const [lightbox, setLightbox] = useState({ isOpen: false, src: '', title: '' });
+
+  const openLightbox = (src, title) => {
+    setLightbox({ isOpen: true, src, title });
+  };
+
+  const closeLightbox = () => {
+    setLightbox({ isOpen: false, src: '', title: '' });
+  };
+
   return (
     <div className="flex flex-col w-full bg-black">
       {/* Hero Section */}
@@ -21,8 +33,15 @@ const About = () => {
               We combine creativity, technical expertise, and a deep understanding of real estate marketing to deliver visuals that do more than look good - they get results.
             </p>
           </ScrollReveal>
-          <ScrollReveal delay={200} className="relative">
-            <img src="/assets/About_01_CET.png" alt="About Architecture" className="rounded-xl w-full h-auto object-cover" />
+          <ScrollReveal 
+            delay={200} 
+            className="relative cursor-pointer group rounded-xl overflow-hidden"
+            onClick={() => openLightbox('/assets/About_01_CE.png', 'We Help Developers Bring Visions to Life')}
+          >
+            <img src="/assets/About_01_CET.png" alt="About Architecture" className="rounded-xl w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <Maximize2 size={32} className="text-gold" />
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -101,7 +120,15 @@ const About = () => {
       <section className="px-6 mb-24">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <img src="/assets/About_02_CET.png" alt="Luxury View" className="w-full h-auto rounded-xl object-cover" />
+            <div 
+              className="relative cursor-pointer group rounded-xl overflow-hidden"
+              onClick={() => openLightbox('/assets/About_02_CE.png', 'Luxury Architectural Experience')}
+            >
+              <img src="/assets/About_02_CET.png" alt="Luxury View" className="w-full h-auto rounded-xl object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <Maximize2 size={36} className="text-gold" />
+              </div>
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -111,8 +138,14 @@ const About = () => {
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="card p-0 overflow-hidden grid grid-cols-1 lg:grid-cols-2 bg-[#0d0d0d]">
-              <div className="h-64 lg:h-auto">
-                 <img src="/assets/About_03_CET.png" alt="Bring Project to Life" className="w-full h-full object-cover" />
+              <div 
+                className="h-64 lg:h-auto cursor-pointer group relative overflow-hidden"
+                onClick={() => openLightbox('/assets/About_03_CE.png', 'Let\'s Bring Your Project to Market')}
+              >
+                 <img src="/assets/About_03_CET.png" alt="Bring Project to Life" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Maximize2 size={32} className="text-gold" />
+                 </div>
               </div>
               <div className="p-12 md:p-16 flex flex-col justify-center">
                  <p className="text-gold font-medium uppercase tracking-wider text-xs mb-4">Ready to Get Started?</p>
@@ -132,6 +165,14 @@ const About = () => {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* LIGHTBOX PREVIEW */}
+      <ImageLightbox
+        isOpen={lightbox.isOpen}
+        onClose={closeLightbox}
+        imageSrc={lightbox.src}
+        title={lightbox.title}
+      />
     </div>
   );
 };

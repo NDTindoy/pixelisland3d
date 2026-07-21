@@ -1,7 +1,8 @@
-import { ArrowRight, Box, Play, Layers, Map, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Box, Play, Layers, Map, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
+import ImageLightbox from '../components/ImageLightbox';
 
 const servicesData = [
   {
@@ -9,6 +10,7 @@ const servicesData = [
     title: 'High-End Villa Renderings',
     desc: 'Photorealistic visuals crafted to showcase design, lifestyle, and investment value.',
     image: '/assets/Services_01_CET.png',
+    fullImage: '/assets/Services_01_CE.png',
     type: 'home'
   },
   {
@@ -16,6 +18,7 @@ const servicesData = [
     title: 'Luxury Hospitality',
     desc: 'Cinematic visualization for resorts, hotels, beach clubs, and wellness destinations.',
     image: '/assets/Services_02_CET.png',
+    fullImage: '/assets/Services_02_CE.png',
     type: 'map'
   },
   {
@@ -23,6 +26,7 @@ const servicesData = [
     title: 'Large-Scale Developments',
     desc: 'Masterplans and visualizations designed to communicate scale, vision, and impact.',
     image: '/assets/Services_03_CET.png',
+    fullImage: '/assets/Services_03_CE.png',
     type: 'layers'
   },
   {
@@ -30,6 +34,7 @@ const servicesData = [
     title: 'Mixed-Use Developments',
     desc: 'Visualization designed for mixed-use, hospitality, retail, and commercial developments.',
     image: '/assets/Services_04_CET.png',
+    fullImage: '/assets/Services_04_CE.png',
     type: 'box'
   },
   {
@@ -37,6 +42,7 @@ const servicesData = [
     title: 'Cinematic Walkthrough',
     desc: 'Story-driven animations that bring architecture to life with emotion and flow.',
     image: '/assets/Services_05_CET.png',
+    fullImage: '/assets/Services_05_CE.png',
     type: 'play'
   }
 ];
@@ -48,6 +54,15 @@ const Services = () => {
   const [currentIndex, setCurrentIndex] = useState(servicesData.length);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const isHovered = useRef(false);
+  const [lightbox, setLightbox] = useState({ isOpen: false, src: '', title: '' });
+
+  const openLightbox = (src, title) => {
+    setLightbox({ isOpen: true, src, title });
+  };
+
+  const closeLightbox = () => {
+    setLightbox({ isOpen: false, src: '', title: '' });
+  };
 
   // Auto-scroll every 3 seconds
   useEffect(() => {
@@ -118,8 +133,15 @@ const Services = () => {
               Story-driven architectural visualization designed to help buyers emotionally experience projects before they're built.
             </p>
           </ScrollReveal>
-          <ScrollReveal delay={200} className="relative">
-            <img src="/assets/Services_01_CET.png" alt="Modern Architecture" className="rounded-xl w-full h-auto object-cover" />
+          <ScrollReveal 
+            delay={200} 
+            className="relative cursor-pointer group rounded-xl overflow-hidden"
+            onClick={() => openLightbox('/assets/Services_01_CE.png', 'Cinematic Visualization for Modern Developments')}
+          >
+            <img src="/assets/Services_01_CET.png" alt="Modern Architecture" className="rounded-xl w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <Maximize2 size={32} className="text-gold" />
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -203,20 +225,26 @@ const Services = () => {
                       key={`${item.id}-${index}`} 
                       className="w-[85%] sm:w-[45%] md:w-[31%] lg:w-[calc((100%-60px)/4)] flex-shrink-0"
                     >
-                      <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all group">
-                        <div className="w-full aspect-[4/5] overflow-hidden">
+                      <div 
+                        onClick={() => openLightbox(item.fullImage, item.title)}
+                        className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all group cursor-pointer"
+                      >
+                        <div className="w-full aspect-[4/5] overflow-hidden relative">
                           <img 
                             src={item.image} 
                             alt={item.title} 
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                           />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Maximize2 size={24} className="text-gold" />
+                          </div>
                         </div>
                         <div className="p-5 flex flex-col gap-2.5 flex-grow bg-[#0d0d0d]">
                           <div className="flex items-start gap-2.5">
                              <div className="text-gold mt-0.5 flex-shrink-0">
                                {renderIcon(item.type)}
                              </div>
-                             <h4 className="font-bold uppercase tracking-wider text-sm md:text-base leading-tight text-white">{item.title}</h4>
+                             <h4 className="font-bold uppercase tracking-wider text-sm md:text-base leading-tight text-white group-hover:text-gold transition-colors">{item.title}</h4>
                           </div>
                           <p className="text-xs text-gray-400 leading-relaxed pl-8">{item.desc}</p>
                         </div>
@@ -252,6 +280,14 @@ const Services = () => {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* LIGHTBOX PREVIEW */}
+      <ImageLightbox
+        isOpen={lightbox.isOpen}
+        onClose={closeLightbox}
+        imageSrc={lightbox.src}
+        title={lightbox.title}
+      />
     </div>
   );
 };

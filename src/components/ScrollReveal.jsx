@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const ScrollReveal = ({ children, className = '', delay = 0 }) => {
+const ScrollReveal = ({ children, className = '', delay = 0, onClick, ...rest }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
@@ -33,8 +33,10 @@ const ScrollReveal = ({ children, className = '', delay = 0 }) => {
   return (
     <div
       ref={ref}
+      onClick={onClick}
       style={{ transitionDelay: `${delay}ms` }}
       className={`reveal-hidden ${isVisible ? 'reveal-visible' : ''} ${className}`}
+      {...rest}
     >
       {children}
     </div>

@@ -1,18 +1,29 @@
 import { useState } from 'react';
-import { ArrowRight, Map } from 'lucide-react';
+import { ArrowRight, Map, Maximize2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
+import ImageLightbox from '../components/ImageLightbox';
 
 const Projects = () => {
   const [filter, setFilter] = useState('All');
+  const [lightbox, setLightbox] = useState({ isOpen: false, src: '', title: '' });
   const filters = ['All', 'Commercial', 'Residential', 'Resorts', 'Villas'];
+
+  const openLightbox = (src, title) => {
+    setLightbox({ isOpen: true, src, title });
+  };
+
+  const closeLightbox = () => {
+    setLightbox({ isOpen: false, src: '', title: '' });
+  };
 
   const projects = [
     { 
       id: 1, 
       title: 'Beachfront Resort',
       subtitle: 'Tropical Lagoon Villa Resort',
-      image: '/assets/Project_01_BeachFront_CET.png', 
+      image: '/assets/Project_01_BeachFront_CET.png',
+      fullImage: '/assets/Project_01_BeachFront_CE.png',
       category: 'Resorts',
       link: '/projects/beachfront-resort'
     },
@@ -20,7 +31,8 @@ const Projects = () => {
       id: 2, 
       title: 'Villas Complex',
       subtitle: 'Luxury Villa Development',
-      image: '/assets/Project_02_Villas_Complex_CET.png', 
+      image: '/assets/Project_02_Villas_Complex_CET.png',
+      fullImage: '/assets/Project_02_Villas_Complex_CE.png',
       category: 'Villas',
       link: '/projects/beachfront-resort'
     },
@@ -28,7 +40,8 @@ const Projects = () => {
       id: 3, 
       title: 'Modern Residence',
       subtitle: 'Contemporary Private Home',
-      image: '/assets/Project_03_Modern_Residence_CET.png', 
+      image: '/assets/Project_03_Modern_Residence_CET.png',
+      fullImage: '/assets/Project_03_Modern_Residence_CE.png',
       category: 'Residential',
       link: '/projects/beachfront-resort'
     },
@@ -36,7 +49,8 @@ const Projects = () => {
       id: 4, 
       title: 'Tropical Resort',
       subtitle: 'Coastal Leisure Destination',
-      image: '/assets/Project_04_Tropical_Resort_CET.png', 
+      image: '/assets/Project_04_Tropical_Resort_CET.png',
+      fullImage: '/assets/Project_04_Tropical_Resort_CE.png',
       category: 'Resorts',
       link: '/projects/beachfront-resort'
     },
@@ -44,15 +58,17 @@ const Projects = () => {
       id: 5, 
       title: 'Modern Villa',
       subtitle: 'Cliffside Architectural Retreat',
-      image: '/assets/Project_05_Modern_Villa_CET.png', 
+      image: '/assets/Project_05_Modern_Villa_CET.png',
+      fullImage: '/assets/Project_05_Modern_Villa_CE.png',
       category: 'Villas',
       link: '/projects/beachfront-resort'
     },
     { 
       id: 6, 
       title: 'Hilltop Residence',
-      subtitle: 'Panorarnic Villa Concept',
-      image: '/assets/Project_06_Caftop_Villa_C_CET.png', 
+      subtitle: 'Panoramic Villa Concept',
+      image: '/assets/Project_06_Caftop_Villa_C_CET.png',
+      fullImage: '/assets/Project_06_Caftop_Villa_C_CE.png',
       category: 'Residential',
       link: '/projects/beachfront-resort'
     },
@@ -104,18 +120,31 @@ const Projects = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, idx) => (
             <ScrollReveal key={project.id} delay={(idx % 3) * 150}>
-              <Link 
-                to={project.link} 
-                className="block relative group overflow-hidden rounded-xl bg-[#0d0d0d] aspect-[4/3] border border-[#222] hover:border-gold/50 transition-all cursor-pointer shadow-lg"
-              >
+              <div className="relative group overflow-hidden rounded-xl bg-[#0d0d0d] aspect-[4/3] border border-[#222] hover:border-gold/50 transition-all shadow-lg">
                 <img 
                   src={project.image} 
                   alt={project.title} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                 />
                 
+                {/* Zoom button on top-right */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openLightbox(project.fullImage, project.title);
+                  }}
+                  title="View High Quality Render"
+                  className="absolute top-4 right-4 z-20 bg-black/70 border border-gold/40 text-gold p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:scale-110 hover:bg-gold hover:text-black"
+                >
+                  <Maximize2 size={18} />
+                </button>
+
                 {/* Title badge overlay at bottom */}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-5 flex items-end justify-between transition-opacity duration-300">
+                <Link 
+                  to={project.link}
+                  className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-5 flex items-end justify-between transition-opacity duration-300 z-10"
+                >
                   <div>
                     <h3 className="text-white font-bold text-lg group-hover:text-gold transition-colors">{project.title}</h3>
                     <p className="text-gray-400 text-xs mt-0.5">{project.subtitle}</p>
@@ -123,8 +152,8 @@ const Projects = () => {
                   <span className="text-xs text-gold border border-gold/40 bg-black/60 px-3 py-1 rounded-full opacity-90 group-hover:opacity-100 group-hover:bg-gold group-hover:text-black transition-all">
                     View Project
                   </span>
-                </div>
-              </Link>
+                </Link>
+              </div>
             </ScrollReveal>
           ))}
         </div>
@@ -151,6 +180,14 @@ const Projects = () => {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* LIGHTBOX PREVIEW */}
+      <ImageLightbox
+        isOpen={lightbox.isOpen}
+        onClose={closeLightbox}
+        imageSrc={lightbox.src}
+        title={lightbox.title}
+      />
     </div>
   );
 };

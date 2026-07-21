@@ -1,8 +1,20 @@
-import { ArrowRight, Globe, Image as ImageIcon, Ruler, Trophy } from 'lucide-react';
+import { ArrowRight, Globe, Image as ImageIcon, Ruler, Trophy, Maximize2 } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
+import ImageLightbox from '../components/ImageLightbox';
 
 const Home = () => {
+  const [lightbox, setLightbox] = useState({ isOpen: false, src: '', title: '' });
+
+  const openLightbox = (src, title) => {
+    setLightbox({ isOpen: true, src, title });
+  };
+
+  const closeLightbox = () => {
+    setLightbox({ isOpen: false, src: '', title: '' });
+  };
+
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
@@ -57,8 +69,15 @@ const Home = () => {
                 </Link>
               </div>
             </ScrollReveal>
-            <ScrollReveal delay={200} className="relative">
-               <img src="/assets/Home_02_CET.png" alt="Modern Architecture" className="rounded-xl w-full h-auto object-cover" />
+            <ScrollReveal 
+              delay={200} 
+              className="relative cursor-pointer group rounded-xl overflow-hidden"
+              onClick={() => openLightbox('/assets/Home_01_CE.png', 'Helping Buyers Experience the Future')}
+            >
+               <img src="/assets/Home_01_CET.png" alt="Modern Architecture" className="rounded-xl w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                 <Maximize2 size={32} className="text-gold" />
+               </div>
             </ScrollReveal>
           </div>
 
@@ -108,57 +127,85 @@ const Home = () => {
           </ScrollReveal>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             <ScrollReveal delay={100} className="card flex flex-col gap-4 p-0 overflow-hidden group">
-               <div className="h-48 overflow-hidden">
-                 <img src="/assets/Home_03_CET.png" alt="Strategic Visuals" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+             {/* Panel 1 */}
+             <div 
+               onClick={() => openLightbox('/assets/Home_02_CE.png', 'Strategic Visuals')}
+               className="card flex flex-col gap-4 p-0 overflow-hidden group cursor-pointer hover:border-gold/60 transition-all shadow-lg relative"
+             >
+               <div className="h-48 overflow-hidden relative">
+                 <img src="/assets/Home_02_CET.png" alt="Strategic Visuals" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Maximize2 size={24} className="text-gold" />
+                 </div>
                </div>
                <div className="p-6">
                  <div className="flex items-center gap-3 mb-3">
                    <div className="text-gold"><ImageIcon size={24} /></div>
-                   <h3 className="text-xl font-bold">Strategic Visuals</h3>
+                   <h3 className="text-xl font-bold group-hover:text-gold transition-colors">Strategic Visuals</h3>
                  </div>
                  <p className="text-gray-400 text-sm">Designed to elevate project presentation and buyer confidence.</p>
                </div>
-             </ScrollReveal>
+             </div>
 
-             <ScrollReveal delay={200} className="card flex flex-col gap-4 p-0 overflow-hidden group">
-               <div className="h-48 overflow-hidden">
-                 <img src="/assets/Home_04_CET.png" alt="Attention to Detail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+             {/* Panel 2 */}
+             <div 
+               onClick={() => openLightbox('/assets/Home_03_CE.png', 'Attention to Detail')}
+               className="card flex flex-col gap-4 p-0 overflow-hidden group cursor-pointer hover:border-gold/60 transition-all shadow-lg relative"
+             >
+               <div className="h-48 overflow-hidden relative">
+                 <img src="/assets/Home_03_CET.png" alt="Attention to Detail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Maximize2 size={24} className="text-gold" />
+                 </div>
                </div>
                <div className="p-6">
                  <div className="flex items-center gap-3 mb-3">
                    <div className="text-gold"><Ruler size={24} /></div>
-                   <h3 className="text-xl font-bold">Attention to Detail</h3>
+                   <h3 className="text-xl font-bold group-hover:text-gold transition-colors">Attention to Detail</h3>
                  </div>
                  <p className="text-gray-400 text-sm">High-end visuals crafted to reflect the true value of your development.</p>
                </div>
-             </ScrollReveal>
+             </div>
 
-             <ScrollReveal delay={300} className="card flex flex-col gap-4 p-0 overflow-hidden group">
-               <div className="h-48 overflow-hidden">
-                 <img src="/assets/Home_05_CET.png" alt="Precision Execution" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+             {/* Panel 3 */}
+             <div 
+               onClick={() => openLightbox('/assets/Home_04_CE.png', 'Precision Execution')}
+               className="card flex flex-col gap-4 p-0 overflow-hidden group cursor-pointer hover:border-gold/60 transition-all shadow-lg relative"
+             >
+               <div className="h-48 overflow-hidden relative">
+                 <img src="/assets/Home_04_CET.png" alt="Precision Execution" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Maximize2 size={24} className="text-gold" />
+                 </div>
                </div>
                <div className="p-6">
                  <div className="flex items-center gap-3 mb-3">
                    <div className="text-gold"><Globe size={24} /></div>
-                   <h3 className="text-xl font-bold">Precision Execution</h3>
+                   <h3 className="text-xl font-bold group-hover:text-gold transition-colors">Precision Execution</h3>
                  </div>
                  <p className="text-gray-400 text-sm">Efficient execution built around precision and quality.</p>
                </div>
-             </ScrollReveal>
+             </div>
 
-             <ScrollReveal delay={400} className="card flex flex-col gap-4 p-0 overflow-hidden group">
-               <div className="h-48 overflow-hidden">
-                 <img src="/assets/Home_06_CET.png" alt="Developer-Focused" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+             {/* Panel 4 */}
+             <div 
+               onClick={() => openLightbox('/assets/Home_05_CE.png', 'Developer-Focused')}
+               className="card flex flex-col gap-4 p-0 overflow-hidden group cursor-pointer hover:border-gold/60 transition-all shadow-lg relative"
+             >
+               <div className="h-48 overflow-hidden relative">
+                 <img src="/assets/Home_05_CET.png" alt="Developer-Focused" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Maximize2 size={24} className="text-gold" />
+                 </div>
                </div>
                <div className="p-6">
                  <div className="flex items-center gap-3 mb-3">
                    <div className="text-gold"><Trophy size={24} /></div>
-                   <h3 className="text-xl font-bold">Developer-Focused</h3>
+                   <h3 className="text-xl font-bold group-hover:text-gold transition-colors">Developer-Focused</h3>
                  </div>
                  <p className="text-gray-400 text-sm">Designed for modern developers and premium projects.</p>
                </div>
-             </ScrollReveal>
+             </div>
           </div>
         </div>
       </section>
@@ -168,8 +215,14 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="card p-0 overflow-hidden grid grid-cols-1 lg:grid-cols-2">
-              <div className="h-64 lg:h-auto">
-                 <img src="/assets/Home_02_CET.png" alt="Bring Project to Life" className="w-full h-full object-cover" />
+              <div 
+                className="h-64 lg:h-auto cursor-pointer group relative overflow-hidden"
+                onClick={() => openLightbox('/assets/Home_06_CE.png', 'Let\'s Bring Your Project to Life')}
+              >
+                 <img src="/assets/Home_06_CET.png" alt="Bring Project to Life" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Maximize2 size={32} className="text-gold" />
+                 </div>
               </div>
               <div className="p-12 md:p-16 flex flex-col justify-center bg-[#0d0d0d]">
                  <p className="text-gold font-medium uppercase tracking-wider text-xs mb-4">Ready to Get Started?</p>
@@ -189,6 +242,14 @@ const Home = () => {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* LIGHTBOX PREVIEW */}
+      <ImageLightbox
+        isOpen={lightbox.isOpen}
+        onClose={closeLightbox}
+        imageSrc={lightbox.src}
+        title={lightbox.title}
+      />
     </div>
   );
 };
