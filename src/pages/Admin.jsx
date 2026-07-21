@@ -64,12 +64,24 @@ const Admin = () => {
     return () => unsubscribe();
   }, [currentUser]);
 
+  const [authError, setAuthError] = useState('');
+
   const handleLogin = async () => {
     setLoggingIn(true);
+    setAuthError('');
     try {
       await signInWithGoogle();
     } catch (err) {
       console.error('Login error:', err);
+      if (err.code === 'auth/operation-not-allowed') {
+        setAuthError('Google Sign-In is not enabled in Firebase Console yet. Please go to Firebase Console -> Authentication -> Sign-in method -> Enable Google.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setAuthError(`This domain (${window.location.hostname}) is not authorized in Firebase Console -> Authentication -> Settings -> Authorized domains.`);
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setAuthError('The Google sign-in window was closed before completing login.');
+      } else {
+        setAuthError(err.message || 'Google Login failed. Check Firebase settings.');
+      }
     } finally {
       setLoggingIn(false);
     }
@@ -149,6 +161,16 @@ const Admin = () => {
               <Info size={18} className="shrink-0 mt-0.5" />
               <div>
                 <strong>Firebase Credentials Pending:</strong> You are currently in preview mode. Click Google Sign-In below to access the demo dashboard.
+              </div>
+            </div>
+          )}
+
+          {authError && (
+            <div className="w-full p-4 mb-6 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-left flex gap-3 items-start">
+              <ShieldAlert size={18} className="shrink-0 mt-0.5 text-red-400" />
+              <div>
+                <strong>Authentication Alert:</strong>
+                <p className="mt-1 leading-relaxed">{authError}</p>
               </div>
             </div>
           )}
