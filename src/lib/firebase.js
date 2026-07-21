@@ -183,6 +183,9 @@ export const submitInquiry = async (formData) => {
   localList.unshift({ ...newInquiry, id: firestoreId || newInquiry.id });
   saveLocalInquiries(localList);
 
+  // Instantly notify Admin UI listeners
+  window.dispatchEvent(new Event('pixel_inquiry_updated'));
+
   // Trigger EmailJS dispatch (with fast timeout protection)
   try {
     const emailPromise = sendInquiryEmailNotification(formData);
@@ -195,13 +198,38 @@ export const submitInquiry = async (formData) => {
   return firestoreId || newInquiry.id;
 };
 
-// Subscribe to Inquiries real-time feed
+// Subscribe to Inquiries real-time feed (merges Firestore & local submissions)
 export const subscribeToInquiries = (callback) => {
+  let lastFirestoreItems = [];
+
+  const getMergedInquiries = () => {
+    const localItems = getLocalInquiries();
+    const map = new Map();
+    // Add local items first
+    localItems.forEach(item => map.set(item.id, item));
+    // Add firestore items (overwriting matching local IDs)
+    lastFirestoreItems.forEach(item => map.set(item.id, item));
+    
+    const combined = Array.from(map.values());
+    combined.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return combined;
+  };
+
+  // Local storage listener handler for instant UI updates
+  const localHandler = () => {
+    callback(getMergedInquiries());
+  };
+
+  window.addEventListener('pixel_inquiry_updated', localHandler);
+  window.addEventListener('storage', localHandler);
+
+  let unsubscribeFirestore = () => {};
+
   if (isFirebaseConfigured && db) {
     try {
       const q = query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'));
-      return onSnapshot(q, (snapshot) => {
-        const items = snapshot.docs.map(docSnap => {
+      unsubscribeFirestore = onSnapshot(q, (snapshot) => {
+        lastFirestoreItems = snapshot.docs.map(docSnap => {
           const data = docSnap.data();
           let createdAtFormatted = new Date().toISOString();
           if (data.createdAt && data.createdAt.toDate) {
@@ -215,21 +243,24 @@ export const subscribeToInquiries = (callback) => {
             createdAt: createdAtFormatted
           };
         });
-        callback(items);
+        callback(getMergedInquiries());
       }, (error) => {
-        console.warn('Firestore snapshot error, falling back to local storage:', error);
-        callback(getLocalInquiries());
+        console.warn('Firestore snapshot error, serving local storage inquiries:', error);
+        callback(getMergedInquiries());
       });
     } catch (err) {
-      console.warn('Firestore subscription failed, falling back:', err);
+      console.warn('Firestore subscription failed, serving local storage inquiries:', err);
     }
   }
 
-  // Fallback mode: emit local inquiries & listen to window events
-  callback(getLocalInquiries());
-  const handler = () => callback(getLocalInquiries());
-  window.addEventListener('pixel_inquiry_updated', handler);
-  return () => window.removeEventListener('pixel_inquiry_updated', handler);
+  // Initial push
+  callback(getMergedInquiries());
+
+  return () => {
+    unsubscribeFirestore();
+    window.removeEventListener('pixel_inquiry_updated', localHandler);
+    window.removeEventListener('storage', localHandler);
+  };
 };
 
 // Update status
