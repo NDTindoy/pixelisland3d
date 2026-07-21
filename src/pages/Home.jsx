@@ -13,8 +13,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto w-full relative z-20 grid grid-cols-1 md:grid-cols-2">
           <div className="flex flex-col gap-6">
             <p className="text-gold font-medium uppercase tracking-wider text-sm">3D Visualization Studio</p>
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-              Sell your project <br /> Before it's built.
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1]">
+              <span className="block">Sell your project</span>
+              <span className="block">Before it's built.</span>
             </h1>
             <p className="text-gray-400 text-lg max-w-md mt-2">
               Cinematic architectural visualization and emotional storytelling designed to help developers sell the vision before construction begins.

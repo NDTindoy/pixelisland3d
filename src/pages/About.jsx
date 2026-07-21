@@ -9,8 +9,9 @@ const About = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="flex flex-col gap-6">
             <p className="text-gold font-medium uppercase tracking-wider text-sm">About Us</p>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              We help developers bring visions to life.
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1]">
+              <span className="block">We help developers</span>
+              <span className="block">bring visions to life.</span>
             </h1>
             <p className="text-gray-400 text-lg">
               Pixel Island is a 3D visualization studio based in Bali, helping developers and real estate brands turn their projects into compelling visuals that sell.

@@ -9,8 +9,11 @@ const Services = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="flex flex-col gap-6">
             <p className="text-gold font-medium uppercase tracking-wider text-sm">What We Do</p>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              Cinematic Visualization for Modern Developments.
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1]">
+              <span className="block">Cinematic</span>
+              <span className="block">Visualization</span>
+              <span className="block">for Modern</span>
+              <span className="block">Developments.</span>
             </h1>
             <p className="text-gray-400 text-lg max-w-md">
               Story-driven architectural visualization designed to help buyers emotionally experience projects before they're built.

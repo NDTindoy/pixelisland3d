@@ -23,8 +23,9 @@ const Projects = () => {
       <section className="pt-16 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
           <p className="text-gold font-medium uppercase tracking-wider text-sm mb-4">Our Work</p>
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight max-w-2xl mb-6">
-            Visuals that bring ideas to life.
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] max-w-2xl mb-6">
+            <span className="block">Visuals that bring</span>
+            <span className="block">ideas to life.</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl">
             A curated collection of architectural visualizations, cinematic renders, and immersive experiences crafted for luxury real estate and modern developments.
