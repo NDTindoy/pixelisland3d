@@ -73,7 +73,9 @@ const Admin = () => {
       await signInWithGoogle();
     } catch (err) {
       console.error('Login error:', err);
-      if (err.code === 'auth/operation-not-allowed') {
+      if (err.code === 'auth/api-key-not-valid') {
+        setAuthError('Google Authentication is not activated in Firebase Console yet. Please go to Firebase Console -> Authentication -> Click "Get Started" -> Sign-in method -> Enable Google.');
+      } else if (err.code === 'auth/operation-not-allowed') {
         setAuthError('Google Sign-In is not enabled in Firebase Console yet. Please go to Firebase Console -> Authentication -> Sign-in method -> Enable Google.');
       } else if (err.code === 'auth/unauthorized-domain') {
         setAuthError(`This domain (${window.location.hostname}) is not authorized in Firebase Console -> Authentication -> Settings -> Authorized domains.`);
