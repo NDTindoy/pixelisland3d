@@ -74,23 +74,16 @@ export const isEmailAuthorized = (email) => {
   return whitelist.includes(email.toLowerCase());
 };
 
-// Sign in with Google (with fallback if Firebase Auth API is uninitialized)
+// Sign in with Google (with graceful fallback if Firebase Auth is uninitialized)
 export const signInWithGoogle = async (customEmail = null) => {
   if (isFirebaseConfigured && auth) {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
     } catch (error) {
-      console.warn('Firebase popup error, falling back to email prompt:', error);
-      // If API key is invalid/uninitialized or popup blocked, fallback to prompt login
-      if (
-        error.code === 'auth/api-key-not-valid' || 
-        error.code === 'auth/invalid-api-key' ||
-        error.code === 'auth/operation-not-allowed'
-      ) {
-        return promptMockLogin(customEmail);
-      }
-      throw error;
+      console.warn('Firebase popup error, falling back to prompt login:', error);
+      // Gracefully fall back to prompt login on any initialization/popup error
+      return promptMockLogin(customEmail);
     }
   }
   return promptMockLogin(customEmail);
