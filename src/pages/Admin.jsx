@@ -215,18 +215,9 @@ const Admin = () => {
           </div>
           
           <h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
-          <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-            Your Google account <strong className="text-white">{currentUser.email}</strong> is not listed on the allowed administrator whitelist.
+          <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+            Your Google account <strong className="text-white">{currentUser.email}</strong> does not have administrator permissions for this control center. Please contact the site owner or switch to an authorized Google account.
           </p>
-
-          <div className="w-full bg-[#141414] border border-[#222] rounded-lg p-4 mb-6 text-left text-xs text-gray-400">
-            <p className="font-semibold text-gray-300 mb-1">Whitelisted Emails Configured:</p>
-            <ul className="list-disc pl-4 space-y-1">
-              {getWhitelistedEmails().map((email, idx) => (
-                <li key={idx} className="text-gold font-mono">{email}</li>
-              ))}
-            </ul>
-          </div>
 
           <button
             onClick={handleLogout}

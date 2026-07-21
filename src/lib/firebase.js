@@ -66,7 +66,7 @@ export const getWhitelistedEmails = () => {
   const envEmails = import.meta.env.VITE_ALLOWED_ADMIN_EMAILS || '';
   const list = envEmails.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
   // Default fallback for demo / admin initial access if env not set
-  return list.length > 0 ? list : ['nilolocco@gmail.com', 'tindoynilo@gmail.com'];
+  return list.length > 0 ? list : ['nilolocco@gmail.com', 'tindoynilo@gmail.com', 'nilotindoy@gmail.com'];
 };
 
 export const isEmailAuthorized = (email) => {
