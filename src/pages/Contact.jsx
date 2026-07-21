@@ -1,4 +1,5 @@
 import { Clock, Lock, FileText, Settings } from 'lucide-react';
+import ScrollReveal from '../components/ScrollReveal';
 
 const Contact = () => {
   return (
@@ -7,7 +8,7 @@ const Contact = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
           
           {/* Left Column */}
-          <div className="flex flex-col gap-12">
+          <ScrollReveal className="flex flex-col gap-12">
             <div>
               <p className="text-gold font-medium uppercase tracking-wider text-sm mb-4">Project Discovery</p>
               <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
@@ -41,10 +42,10 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right Column - Form */}
-          <div className="card bg-[#0d0d0d] p-8 md:p-10 border-[#222]">
+          <ScrollReveal delay={200} className="card bg-[#0d0d0d] p-8 md:p-10 border-[#222]">
              <form className="flex flex-col gap-8">
                 
                 {/* YOUR DETAILS */}
@@ -160,7 +161,7 @@ const Contact = () => {
                   </button>
                 </div>
              </form>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>
