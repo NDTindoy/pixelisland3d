@@ -8,12 +8,54 @@ const Projects = () => {
   const filters = ['All', 'Commercial', 'Residential', 'Resorts', 'Villas'];
 
   const projects = [
-    { id: 1, image: '/assets/Project_01_BeachFront_CET.png', category: 'Resorts' },
-    { id: 2, image: '/assets/Project_02_Villas_Complex_CET.png', category: 'Villas' },
-    { id: 3, image: '/assets/Project_03_Modern_Residence_CET.png', category: 'Residential' },
-    { id: 4, image: '/assets/Project_04_Tropical_Resort_CET.png', category: 'Resorts' },
-    { id: 5, image: '/assets/Project_05_Modern_Villa_CET.png', category: 'Villas' },
-    { id: 6, image: '/assets/Project_06_Caftop_Villa_C_CET.png', category: 'Residential' },
+    { 
+      id: 1, 
+      title: 'Beachfront Resort',
+      subtitle: 'Tropical Lagoon Villa Resort',
+      image: '/assets/Project_01_BeachFront_CET.png', 
+      category: 'Resorts',
+      link: '/projects/beachfront-resort'
+    },
+    { 
+      id: 2, 
+      title: 'Villas Complex',
+      subtitle: 'Luxury Villa Development',
+      image: '/assets/Project_02_Villas_Complex_CET.png', 
+      category: 'Villas',
+      link: '/projects/beachfront-resort'
+    },
+    { 
+      id: 3, 
+      title: 'Modern Residence',
+      subtitle: 'Contemporary Private Home',
+      image: '/assets/Project_03_Modern_Residence_CET.png', 
+      category: 'Residential',
+      link: '/projects/beachfront-resort'
+    },
+    { 
+      id: 4, 
+      title: 'Tropical Resort',
+      subtitle: 'Coastal Leisure Destination',
+      image: '/assets/Project_04_Tropical_Resort_CET.png', 
+      category: 'Resorts',
+      link: '/projects/beachfront-resort'
+    },
+    { 
+      id: 5, 
+      title: 'Modern Villa',
+      subtitle: 'Cliffside Architectural Retreat',
+      image: '/assets/Project_05_Modern_Villa_CET.png', 
+      category: 'Villas',
+      link: '/projects/beachfront-resort'
+    },
+    { 
+      id: 6, 
+      title: 'Hilltop Residence',
+      subtitle: 'Panorarnic Villa Concept',
+      image: '/assets/Project_06_Caftop_Villa_C_CET.png', 
+      category: 'Residential',
+      link: '/projects/beachfront-resort'
+    },
   ];
 
   const filteredProjects = filter === 'All' ? projects : projects.filter(p => p.category === filter);
@@ -62,18 +104,27 @@ const Projects = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, idx) => (
             <ScrollReveal key={project.id} delay={(idx % 3) * 150}>
-              <div className="relative group overflow-hidden rounded-xl bg-[#0d0d0d] aspect-[4/3] border border-[#222] hover:border-gold/50 transition-all">
+              <Link 
+                to={project.link} 
+                className="block relative group overflow-hidden rounded-xl bg-[#0d0d0d] aspect-[4/3] border border-[#222] hover:border-gold/50 transition-all cursor-pointer shadow-lg"
+              >
                 <img 
                   src={project.image} 
-                  alt={`Project ${project.id}`} 
+                  alt={project.title} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                   <Link to="/contact" className="text-white font-medium bg-black/80 px-6 py-2 rounded-full hover:text-gold transition-colors">
-                      View Project
-                   </Link>
+                
+                {/* Title badge overlay at bottom */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-5 flex items-end justify-between transition-opacity duration-300">
+                  <div>
+                    <h3 className="text-white font-bold text-lg group-hover:text-gold transition-colors">{project.title}</h3>
+                    <p className="text-gray-400 text-xs mt-0.5">{project.subtitle}</p>
+                  </div>
+                  <span className="text-xs text-gold border border-gold/40 bg-black/60 px-3 py-1 rounded-full opacity-90 group-hover:opacity-100 group-hover:bg-gold group-hover:text-black transition-all">
+                    View Project
+                  </span>
                 </div>
-              </div>
+              </Link>
             </ScrollReveal>
           ))}
         </div>

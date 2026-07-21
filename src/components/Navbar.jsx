@@ -1,9 +1,10 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const links = [
     { name: 'Home', path: '/' },
@@ -11,6 +12,12 @@ const Navbar = () => {
     { name: 'Projects', path: '/projects' },
     { name: 'About', path: '/about' },
   ];
+
+  const checkIsActive = (path, isActive) => {
+    if (isActive) return true;
+    if (path === '/projects' && location.pathname.startsWith('/projects')) return true;
+    return false;
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md">
@@ -29,7 +36,9 @@ const Navbar = () => {
               key={link.name}
               to={link.path}
               className={({ isActive }) =>
-                `text-sm font-medium transition-colors hover:text-gold ${isActive ? 'text-white border-b-2 border-gold pb-1' : 'text-gray-400'}`
+                `text-sm font-medium transition-colors hover:text-gold ${
+                  checkIsActive(link.path, isActive) ? 'text-white border-b-2 border-gold pb-1' : 'text-gray-400'
+                }`
               }
             >
               {link.name}
@@ -53,7 +62,9 @@ const Navbar = () => {
               to={link.path}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
-                `text-lg font-medium transition-colors ${isActive ? 'text-gold' : 'text-white'}`
+                `text-lg font-medium transition-colors ${
+                  checkIsActive(link.path, isActive) ? 'text-gold' : 'text-white'
+                }`
               }
             >
               {link.name}
