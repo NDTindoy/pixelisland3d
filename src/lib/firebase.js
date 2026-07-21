@@ -74,19 +74,32 @@ export const isEmailAuthorized = (email) => {
   return whitelist.includes(email.toLowerCase());
 };
 
-// Sign in with Google (with graceful fallback if Firebase Auth is uninitialized)
+// Direct Admin Email Login (Bypasses browser popup blockers)
+export const signInWithAdminEmail = async (email = 'tindoynilo@gmail.com') => {
+  const cleanEmail = email.trim().toLowerCase();
+  const mockUser = {
+    uid: `admin_${Date.now()}`,
+    displayName: cleanEmail.split('@')[0],
+    email: cleanEmail,
+    photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+  };
+  localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
+  window.dispatchEvent(new Event('storage'));
+  return mockUser;
+};
+
+// Sign in with Google (with graceful fallback if Firebase Auth is uninitialized or blocked by browser)
 export const signInWithGoogle = async (customEmail = null) => {
   if (isFirebaseConfigured && auth) {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
     } catch (error) {
-      console.warn('Firebase popup error, falling back to prompt login:', error);
-      // Gracefully fall back to prompt login on any initialization/popup error
-      return promptMockLogin(customEmail);
+      console.warn('Firebase popup error, falling back to instant admin login:', error);
+      return signInWithAdminEmail(customEmail || 'tindoynilo@gmail.com');
     }
   }
-  return promptMockLogin(customEmail);
+  return signInWithAdminEmail(customEmail || 'tindoynilo@gmail.com');
 };
 
 function promptMockLogin(customEmail = null) {
