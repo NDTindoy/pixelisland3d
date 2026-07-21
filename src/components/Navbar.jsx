@@ -30,18 +30,22 @@ const Navbar = () => {
           </div>
         </NavLink>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-2">
           {links.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               className={({ isActive }) =>
-                `text-sm font-medium transition-colors hover:text-gold ${
-                  checkIsActive(link.path, isActive) ? 'text-white border-b-2 border-gold pb-1' : 'text-gray-400'
+                `px-4 py-3 text-sm font-medium transition-colors hover:text-gold ${
+                  checkIsActive(link.path, isActive) ? 'text-white' : 'text-gray-400'
                 }`
               }
             >
-              {link.name}
+              {({ isActive }) => (
+                <span className={`inline-block relative ${checkIsActive(link.path, isActive) ? 'border-b-2 border-gold pb-1' : ''}`}>
+                  {link.name}
+                </span>
+              )}
             </NavLink>
           ))}
           <NavLink to="/contact" className="btn-primary ml-4 text-sm px-5 py-2.5">
@@ -55,22 +59,22 @@ const Navbar = () => {
       </div>
 
       {isOpen && (
-        <div className="md:hidden absolute top-[81px] left-0 w-full bg-black p-6 flex flex-col gap-6">
+        <div className="md:hidden absolute top-[81px] left-0 w-full bg-black p-6 flex flex-col gap-2">
           {links.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
-                `text-lg font-medium transition-colors ${
-                  checkIsActive(link.path, isActive) ? 'text-gold' : 'text-white'
+                `px-4 py-3 text-lg font-medium transition-colors rounded-md ${
+                  checkIsActive(link.path, isActive) ? 'text-gold bg-white/5' : 'text-white hover:bg-white/5'
                 }`
               }
             >
               {link.name}
             </NavLink>
           ))}
-          <NavLink to="/contact" onClick={() => setIsOpen(false)} className="btn-primary justify-center">
+          <NavLink to="/contact" onClick={() => setIsOpen(false)} className="btn-primary justify-center mt-2">
             Get Started
           </NavLink>
         </div>
