@@ -1,5 +1,6 @@
 import { ArrowRight, Globe, Image as ImageIcon, Ruler, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ScrollReveal from '../components/ScrollReveal';
 
 const Home = () => {
   return (
@@ -11,7 +12,7 @@ const Home = () => {
           <img src="/assets/Home_01_CET.png" alt="Luxury Villa" className="w-full h-full object-cover object-right" />
         </div>
         <div className="max-w-7xl mx-auto w-full relative z-20 grid grid-cols-1 md:grid-cols-2">
-          <div className="flex flex-col gap-6">
+          <ScrollReveal className="flex flex-col gap-6">
             <p className="text-gold font-medium uppercase tracking-wider text-sm">3D Visualization Studio</p>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1]">
               <span className="block">Sell your project</span>
@@ -28,7 +29,7 @@ const Home = () => {
                 View Our Work <ArrowRight size={18} />
               </Link>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -36,7 +37,7 @@ const Home = () => {
       <section className="py-24 px-6 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="flex flex-col gap-6">
+            <ScrollReveal className="flex flex-col gap-6">
               <p className="text-gold font-medium uppercase tracking-wider text-sm">Our Story</p>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight">
                 Helping Buyers Experience the Future Before It Exists.
@@ -55,57 +56,59 @@ const Home = () => {
                   Learn More <ArrowRight size={18} />
                 </Link>
               </div>
-            </div>
-            <div className="relative">
+            </ScrollReveal>
+            <ScrollReveal delay={200} className="relative">
                <img src="/assets/Home_02_CET.png" alt="Modern Architecture" className="rounded-xl w-full h-auto object-cover" />
-            </div>
+            </ScrollReveal>
           </div>
 
           {/* Stats Bar */}
-          <div className="mt-24 card grid grid-cols-2 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-[#333]">
-            <div className="flex items-center gap-4 p-4">
-               <div className="text-gold"><Trophy size={32} /></div>
-               <div>
-                 <h4 className="text-2xl font-bold">6+</h4>
-                 <p className="text-xs text-gray-400 uppercase tracking-wider">Years of Experience</p>
-               </div>
+          <ScrollReveal delay={150}>
+            <div className="mt-24 card grid grid-cols-2 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-[#333]">
+              <div className="flex items-center gap-4 p-4">
+                 <div className="text-gold"><Trophy size={32} /></div>
+                 <div>
+                   <h4 className="text-2xl font-bold">6+</h4>
+                   <p className="text-xs text-gray-400 uppercase tracking-wider">Years of Experience</p>
+                 </div>
+              </div>
+              <div className="flex items-center gap-4 p-4">
+                 <div className="text-gold"><Ruler size={32} /></div>
+                 <div>
+                   <h4 className="text-2xl font-bold">4000+</h4>
+                   <p className="text-xs text-gray-400 uppercase tracking-wider">Visualization Hours</p>
+                 </div>
+              </div>
+              <div className="flex items-center gap-4 p-4">
+                 <div className="text-gold"><Globe size={32} /></div>
+                 <div>
+                   <h4 className="text-2xl font-bold">20+</h4>
+                   <p className="text-xs text-gray-400 uppercase tracking-wider">Visualized Projects</p>
+                 </div>
+              </div>
+              <div className="flex items-center gap-4 p-4">
+                 <div className="text-gold"><ImageIcon size={32} /></div>
+                 <div className="flex items-center h-full">
+                   <h4 className="text-sm font-bold uppercase tracking-wider">Luxury-Driven Design</h4>
+                 </div>
+              </div>
             </div>
-            <div className="flex items-center gap-4 p-4">
-               <div className="text-gold"><Ruler size={32} /></div>
-               <div>
-                 <h4 className="text-2xl font-bold">4000+</h4>
-                 <p className="text-xs text-gray-400 uppercase tracking-wider">Visualization Hours</p>
-               </div>
-            </div>
-            <div className="flex items-center gap-4 p-4">
-               <div className="text-gold"><Globe size={32} /></div>
-               <div>
-                 <h4 className="text-2xl font-bold">20+</h4>
-                 <p className="text-xs text-gray-400 uppercase tracking-wider">Visualized Projects</p>
-               </div>
-            </div>
-            <div className="flex items-center gap-4 p-4">
-               <div className="text-gold"><ImageIcon size={32} /></div>
-               <div className="flex items-center h-full">
-                 <h4 className="text-sm font-bold uppercase tracking-wider">Luxury-Driven Design</h4>
-               </div>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* What Sets Us Apart */}
       <section className="py-24 px-6 bg-black">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16">
+          <ScrollReveal className="mb-16">
             <p className="text-gold font-medium uppercase tracking-wider text-sm mb-4">What Sets Us Apart</p>
             <h2 className="text-4xl md:text-5xl font-bold leading-tight max-w-3xl">
               High-end visualization designed for modern developments.
             </h2>
-          </div>
+          </ScrollReveal>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             <div className="card flex flex-col gap-4 p-0 overflow-hidden group">
+             <ScrollReveal delay={100} className="card flex flex-col gap-4 p-0 overflow-hidden group">
                <div className="h-48 overflow-hidden">
                  <img src="/assets/Home_03_CET.png" alt="Strategic Visuals" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                </div>
@@ -116,9 +119,9 @@ const Home = () => {
                  </div>
                  <p className="text-gray-400 text-sm">Designed to elevate project presentation and buyer confidence.</p>
                </div>
-             </div>
+             </ScrollReveal>
 
-             <div className="card flex flex-col gap-4 p-0 overflow-hidden group">
+             <ScrollReveal delay={200} className="card flex flex-col gap-4 p-0 overflow-hidden group">
                <div className="h-48 overflow-hidden">
                  <img src="/assets/Home_04_CET.png" alt="Attention to Detail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                </div>
@@ -129,9 +132,9 @@ const Home = () => {
                  </div>
                  <p className="text-gray-400 text-sm">High-end visuals crafted to reflect the true value of your development.</p>
                </div>
-             </div>
+             </ScrollReveal>
 
-             <div className="card flex flex-col gap-4 p-0 overflow-hidden group">
+             <ScrollReveal delay={300} className="card flex flex-col gap-4 p-0 overflow-hidden group">
                <div className="h-48 overflow-hidden">
                  <img src="/assets/Home_05_CET.png" alt="Precision Execution" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                </div>
@@ -142,9 +145,9 @@ const Home = () => {
                  </div>
                  <p className="text-gray-400 text-sm">Efficient execution built around precision and quality.</p>
                </div>
-             </div>
+             </ScrollReveal>
 
-             <div className="card flex flex-col gap-4 p-0 overflow-hidden group">
+             <ScrollReveal delay={400} className="card flex flex-col gap-4 p-0 overflow-hidden group">
                <div className="h-48 overflow-hidden">
                  <img src="/assets/Home_06_CET.png" alt="Developer-Focused" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                </div>
@@ -155,7 +158,7 @@ const Home = () => {
                  </div>
                  <p className="text-gray-400 text-sm">Designed for modern developers and premium projects.</p>
                </div>
-             </div>
+             </ScrollReveal>
           </div>
         </div>
       </section>
@@ -163,25 +166,27 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-12 px-6 bg-black mb-12">
         <div className="max-w-7xl mx-auto">
-          <div className="card p-0 overflow-hidden grid grid-cols-1 lg:grid-cols-2">
-            <div className="h-64 lg:h-auto">
-               <img src="/assets/Home_02_CET.png" alt="Bring Project to Life" className="w-full h-full object-cover" />
+          <ScrollReveal>
+            <div className="card p-0 overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+              <div className="h-64 lg:h-auto">
+                 <img src="/assets/Home_02_CET.png" alt="Bring Project to Life" className="w-full h-full object-cover" />
+              </div>
+              <div className="p-12 md:p-16 flex flex-col justify-center bg-[#0d0d0d]">
+                 <p className="text-gold font-medium uppercase tracking-wider text-xs mb-4">Ready to Get Started?</p>
+                 <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
+                   Let's Bring Your Project to Life.
+                 </h2>
+                 <p className="text-gray-400 mb-8 max-w-md">
+                   High-end visualization designed to help developers present projects with clarity and confidence.
+                 </p>
+                 <div>
+                   <Link to="/contact" className="btn-primary inline-flex">
+                     Get Started <ArrowRight size={18} />
+                   </Link>
+                 </div>
+              </div>
             </div>
-            <div className="p-12 md:p-16 flex flex-col justify-center bg-[#0d0d0d]">
-               <p className="text-gold font-medium uppercase tracking-wider text-xs mb-4">Ready to Get Started?</p>
-               <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
-                 Let's Bring Your Project to Life.
-               </h2>
-               <p className="text-gray-400 mb-8 max-w-md">
-                 High-end visualization designed to help developers present projects with clarity and confidence.
-               </p>
-               <div>
-                 <Link to="/contact" className="btn-primary inline-flex">
-                   Get Started <ArrowRight size={18} />
-                 </Link>
-               </div>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>
