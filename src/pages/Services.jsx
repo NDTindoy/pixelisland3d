@@ -1,8 +1,106 @@
-import { ArrowRight, Box, Play, Layers, Map } from 'lucide-react';
+import { ArrowRight, Box, Play, Layers, Map, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 
+const servicesData = [
+  {
+    id: 'villa',
+    title: 'High-End Villa Renderings',
+    desc: 'Photorealistic visuals crafted to showcase design, lifestyle, and investment value.',
+    image: '/assets/Services_01_CET.png',
+    type: 'home'
+  },
+  {
+    id: 'hospitality',
+    title: 'Luxury Hospitality',
+    desc: 'Cinematic visualization for resorts, hotels, beach clubs, and wellness destinations.',
+    image: '/assets/Services_02_CET.png',
+    type: 'map'
+  },
+  {
+    id: 'large-scale',
+    title: 'Large-Scale Developments',
+    desc: 'Masterplans and visualizations designed to communicate scale, vision, and impact.',
+    image: '/assets/Services_03_CET.png',
+    type: 'layers'
+  },
+  {
+    id: 'mixed-use',
+    title: 'Mixed-Use Developments',
+    desc: 'Visualization designed for mixed-use, hospitality, retail, and commercial developments.',
+    image: '/assets/Services_04_CET.png',
+    type: 'box'
+  },
+  {
+    id: 'walkthrough',
+    title: 'Cinematic Walkthrough',
+    desc: 'Story-driven animations that bring architecture to life with emotion and flow.',
+    image: '/assets/Services_05_CET.png',
+    type: 'play'
+  }
+];
+
+// Duplicate array for endless seamless loop
+const infiniteData = [...servicesData, ...servicesData, ...servicesData];
+
 const Services = () => {
+  const [currentIndex, setCurrentIndex] = useState(servicesData.length);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const isHovered = useRef(false);
+
+  // Auto-scroll every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isHovered.current) {
+        handleNext();
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex]);
+
+  const handleNext = () => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev - 1);
+  };
+
+  const handleTransitionEnd = () => {
+    if (currentIndex >= servicesData.length * 2) {
+      setIsTransitioning(false);
+      setCurrentIndex(servicesData.length);
+    } else if (currentIndex < servicesData.length) {
+      setIsTransitioning(false);
+      setCurrentIndex(servicesData.length * 2 - 1);
+    }
+  };
+
+  const renderIcon = (type) => {
+    switch (type) {
+      case 'home':
+        return (
+          <svg className="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+        );
+      case 'map':
+        return <Map size={24} strokeWidth={1.5} />;
+      case 'layers':
+        return <Layers size={24} strokeWidth={1.5} />;
+      case 'box':
+        return <Box size={24} strokeWidth={1.5} />;
+      case 'play':
+        return <Play size={24} strokeWidth={1.5} />;
+      default:
+        return <Box size={24} strokeWidth={1.5} />;
+    }
+  };
+
   return (
     <div className="flex flex-col w-full bg-black">
       {/* Hero Section */}
@@ -63,120 +161,71 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Portfolio Horizontal Section / Carousel */}
-      <section className="py-20 px-6 overflow-hidden relative">
-        <div className="max-w-7xl mx-auto relative group/carousel">
-          
-          {/* Navigation Buttons */}
-          <div className="flex items-center justify-between absolute -top-12 right-0 gap-3 mb-4 z-10">
-            <button 
-              onClick={() => {
-                document.getElementById('services-carousel').scrollBy({ left: -350, behavior: 'smooth' });
-              }}
-              className="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-gold transition-colors bg-black/50 backdrop-blur-sm"
-              aria-label="Previous"
-            >
-              &#8592;
-            </button>
-            <button 
-              onClick={() => {
-                document.getElementById('services-carousel').scrollBy({ left: 350, behavior: 'smooth' });
-              }}
-              className="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-gold transition-colors bg-black/50 backdrop-blur-sm"
-              aria-label="Next"
-            >
-              &#8594;
-            </button>
-          </div>
-
+      {/* Portfolio Carousel Container matching 4 panels visible layout */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div 
-              id="services-carousel" 
-              className="flex gap-6 overflow-x-auto pb-8 pt-4 snap-x no-scrollbar scroll-smooth"
+              className="relative border border-[#222] bg-[#050505] rounded-2xl p-4 md:p-6"
+              onMouseEnter={() => (isHovered.current = true)}
+              onMouseLeave={() => (isHovered.current = false)}
             >
-              {/* Card 1: High-End Villa Renderings */}
-              <div className="min-w-[300px] md:min-w-[340px] max-w-[340px] snap-start">
-                <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all">
-                  <div className="w-full aspect-[4/5] overflow-hidden">
-                    <img src="/assets/Services_01_CET.png" alt="High-End Villa Renderings" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <div className="p-6 flex flex-col gap-3 flex-grow bg-[#0d0d0d]">
-                    <div className="flex items-start gap-3">
-                       <div className="text-gold mt-0.5">
-                         <svg className="w-6 h-6 stroke-current fill-none" viewBox="0 0 24 24" strokeWidth="1.5">
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                         </svg>
-                       </div>
-                       <h4 className="font-bold uppercase tracking-wider text-base leading-tight text-white">High-End Villa Renderings</h4>
-                    </div>
-                    <p className="text-xs text-gray-400 leading-relaxed pl-9">Photorealistic visuals crafted to showcase design, lifestyle, and investment value.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2: Luxury Hospitality */}
-              <div className="min-w-[300px] md:min-w-[340px] max-w-[340px] snap-start">
-                <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all">
-                  <div className="w-full aspect-[4/5] overflow-hidden">
-                    <img src="/assets/Services_02_CET.png" alt="Luxury Hospitality" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <div className="p-6 flex flex-col gap-3 flex-grow bg-[#0d0d0d]">
-                    <div className="flex items-start gap-3">
-                       <div className="text-gold mt-0.5"><Map size={24} strokeWidth={1.5} /></div>
-                       <h4 className="font-bold uppercase tracking-wider text-base leading-tight text-white">Luxury Hospitality</h4>
-                    </div>
-                    <p className="text-xs text-gray-400 leading-relaxed pl-9">Cinematic visualization for resorts, hotels, beach clubs, and wellness destinations.</p>
-                  </div>
-                </div>
-              </div>
               
-              {/* Card 3: Large-Scale Developments */}
-              <div className="min-w-[300px] md:min-w-[340px] max-w-[340px] snap-start">
-                <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all">
-                  <div className="w-full aspect-[4/5] overflow-hidden">
-                    <img src="/assets/Services_03_CET.png" alt="Large-Scale Developments" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <div className="p-6 flex flex-col gap-3 flex-grow bg-[#0d0d0d]">
-                    <div className="flex items-start gap-3">
-                       <div className="text-gold mt-0.5"><Layers size={24} strokeWidth={1.5} /></div>
-                       <h4 className="font-bold uppercase tracking-wider text-base leading-tight text-white">Large-Scale Developments</h4>
+              {/* Left Arrow Button centered on left edge */}
+              <button 
+                onClick={handlePrev}
+                className="absolute -left-5 md:-left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gold/50 bg-black text-gold hover:text-white hover:border-gold transition-all flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95"
+                aria-label="Previous"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              {/* Right Arrow Button centered on right edge */}
+              <button 
+                onClick={handleNext}
+                className="absolute -right-5 md:-right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gold/50 bg-black text-gold hover:text-white hover:border-gold transition-all flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95"
+                aria-label="Next"
+              >
+                <ChevronRight size={24} />
+              </button>
+
+              {/* Hidden Scrollbar Container */}
+              <div className="overflow-hidden w-full py-1">
+                <div 
+                  className={`flex gap-4 md:gap-5 ${isTransitioning ? 'transition-transform duration-700 ease-in-out' : ''}`}
+                  style={{
+                    transform: `translateX(calc(-${currentIndex} * (100% / 4 + 5px)))`
+                  }}
+                  onTransitionEnd={handleTransitionEnd}
+                >
+                  {infiniteData.map((item, index) => (
+                    <div 
+                      key={`${item.id}-${index}`} 
+                      className="w-[85%] sm:w-[45%] md:w-[31%] lg:w-[calc((100%-60px)/4)] flex-shrink-0"
+                    >
+                      <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all group">
+                        <div className="w-full aspect-[4/5] overflow-hidden">
+                          <img 
+                            src={item.image} 
+                            alt={item.title} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                          />
+                        </div>
+                        <div className="p-5 flex flex-col gap-2.5 flex-grow bg-[#0d0d0d]">
+                          <div className="flex items-start gap-2.5">
+                             <div className="text-gold mt-0.5 flex-shrink-0">
+                               {renderIcon(item.type)}
+                             </div>
+                             <h4 className="font-bold uppercase tracking-wider text-sm md:text-base leading-tight text-white">{item.title}</h4>
+                          </div>
+                          <p className="text-xs text-gray-400 leading-relaxed pl-8">{item.desc}</p>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-400 leading-relaxed pl-9">Masterplans and visualizations designed to communicate scale, vision, and impact.</p>
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Card 4: Mixed-Use Developments */}
-              <div className="min-w-[300px] md:min-w-[340px] max-w-[340px] snap-start">
-                <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all">
-                  <div className="w-full aspect-[4/5] overflow-hidden">
-                    <img src="/assets/Services_04_CET.png" alt="Mixed-Use Developments" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <div className="p-6 flex flex-col gap-3 flex-grow bg-[#0d0d0d]">
-                    <div className="flex items-start gap-3">
-                       <div className="text-gold mt-0.5"><Box size={24} strokeWidth={1.5} /></div>
-                       <h4 className="font-bold uppercase tracking-wider text-base leading-tight text-white">Mixed-Use Developments</h4>
-                    </div>
-                    <p className="text-xs text-gray-400 leading-relaxed pl-9">Visualization designed for mixed-use, hospitality, retail, and commercial developments.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 5: Cinematic Walkthrough */}
-              <div className="min-w-[300px] md:min-w-[340px] max-w-[340px] snap-start">
-                <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all">
-                  <div className="w-full aspect-[4/5] overflow-hidden">
-                    <img src="/assets/Services_05_CET.png" alt="Cinematic Walkthrough" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <div className="p-6 flex flex-col gap-3 flex-grow bg-[#0d0d0d]">
-                    <div className="flex items-start gap-3">
-                       <div className="text-gold mt-0.5"><Play size={24} strokeWidth={1.5} /></div>
-                       <h4 className="font-bold uppercase tracking-wider text-base leading-tight text-white">Cinematic Walkthrough</h4>
-                    </div>
-                    <p className="text-xs text-gray-400 leading-relaxed pl-9">Story-driven animations that bring architecture to life with emotion and flow.</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </ScrollReveal>
         </div>
