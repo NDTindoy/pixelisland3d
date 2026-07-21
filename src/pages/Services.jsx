@@ -93,7 +93,7 @@ const Services = () => {
             <div className="min-w-[300px] md:min-w-[340px] max-w-[340px] snap-start">
               <div className="card p-0 overflow-hidden flex flex-col h-full bg-[#0d0d0d] border border-[#222] rounded-xl hover:border-gold/50 transition-all">
                 <div className="w-full aspect-[4/5] overflow-hidden">
-                  <img src="/assets/Project_05_Modern_Villa_CET.png" alt="High-End Villa Renderings" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <img src="/assets/Services_01_CET.png" alt="High-End Villa Renderings" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="p-6 flex flex-col gap-3 flex-grow bg-[#0d0d0d]">
                   <div className="flex items-start gap-3">
