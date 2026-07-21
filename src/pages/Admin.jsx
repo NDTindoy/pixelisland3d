@@ -95,25 +95,35 @@ const Admin = () => {
     setSelectedInquiry(null);
   };
 
+  const getNormalizedStatus = (status) => {
+    if (!status) return 'new';
+    const s = String(status).toLowerCase().trim().replace(/\s+/g, '_');
+    return s === 'in_progress' || s === 'inprogress' ? 'in_progress' : s;
+  };
+
   const handleStatusChange = async (id, newStatus) => {
-    await updateInquiryStatus(id, newStatus);
+    // Optimistic UI state update
+    setInquiries(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
     if (selectedInquiry && selectedInquiry.id === id) {
       setSelectedInquiry(prev => ({ ...prev, status: newStatus }));
     }
+    await updateInquiryStatus(id, newStatus);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this inquiry entry?')) {
-      await deleteInquiry(id);
+      setInquiries(prev => prev.filter(item => item.id !== id));
       if (selectedInquiry && selectedInquiry.id === id) {
         setSelectedInquiry(null);
       }
+      await deleteInquiry(id);
     }
   };
 
   // Filter & Search Logic
   const filteredInquiries = inquiries.filter(item => {
-    const matchesTab = activeTab === 'all' || item.status === activeTab;
+    const itemStatus = getNormalizedStatus(item.status);
+    const matchesTab = activeTab === 'all' || itemStatus === activeTab;
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch = !q || 
       (item.fullName && item.fullName.toLowerCase().includes(q)) ||
@@ -128,9 +138,9 @@ const Admin = () => {
   // Calculate Metrics
   const stats = {
     total: inquiries.length,
-    newCount: inquiries.filter(i => i.status === 'new').length,
-    contactedCount: inquiries.filter(i => i.status === 'contacted').length,
-    inProgressCount: inquiries.filter(i => i.status === 'in_progress').length,
+    newCount: inquiries.filter(i => getNormalizedStatus(i.status) === 'new').length,
+    contactedCount: inquiries.filter(i => getNormalizedStatus(i.status) === 'contacted').length,
+    inProgressCount: inquiries.filter(i => getNormalizedStatus(i.status) === 'in_progress').length,
   };
 
   if (authLoading) {
@@ -353,7 +363,8 @@ const Admin = () => {
               </div>
             ) : (
               filteredInquiries.map((inquiry) => {
-                const statusInfo = STATUS_CONFIG[inquiry.status] || STATUS_CONFIG.new;
+                const normalizedKey = getNormalizedStatus(inquiry.status);
+                const statusInfo = STATUS_CONFIG[normalizedKey] || STATUS_CONFIG.new;
                 const isSelected = selectedInquiry?.id === inquiry.id;
 
                 return (
@@ -441,7 +452,7 @@ const Admin = () => {
                         key={key}
                         onClick={() => handleStatusChange(selectedInquiry.id, key)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold border transition-all ${
-                          selectedInquiry.status === key
+                          getNormalizedStatus(selectedInquiry.status) === key
                             ? `${cfg.color} ring-1 ring-gold`
                             : 'bg-[#181818] border-[#2a2a2a] text-gray-400 hover:text-white'
                         }`}
