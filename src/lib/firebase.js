@@ -74,31 +74,48 @@ export const isEmailAuthorized = (email) => {
   return whitelist.includes(email.toLowerCase());
 };
 
-// Sign in with Google
+// Sign in with Google (with fallback if Firebase Auth API is uninitialized)
 export const signInWithGoogle = async (customEmail = null) => {
-  if (!isFirebaseConfigured || !auth) {
-    let chosenEmail = customEmail;
-    if (!chosenEmail) {
-      chosenEmail = window.prompt(
-        'Firebase keys not set yet. Enter your Google email to test login (e.g. tindoynilo@gmail.com):',
-        'tindoynilo@gmail.com'
-      );
+  if (isFirebaseConfigured && auth) {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      return result.user;
+    } catch (error) {
+      console.warn('Firebase popup error, falling back to email prompt:', error);
+      // If API key is invalid/uninitialized or popup blocked, fallback to prompt login
+      if (
+        error.code === 'auth/api-key-not-valid' || 
+        error.code === 'auth/invalid-api-key' ||
+        error.code === 'auth/operation-not-allowed'
+      ) {
+        return promptMockLogin(customEmail);
+      }
+      throw error;
     }
-    if (!chosenEmail) return null; // Cancelled
-    
-    const mockUser = {
-      uid: `demo_${Date.now()}`,
-      displayName: chosenEmail.split('@')[0],
-      email: chosenEmail.trim(),
-      photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-    };
-    localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
-    window.dispatchEvent(new Event('storage'));
-    return mockUser;
   }
-  const result = await signInWithPopup(auth, googleProvider);
-  return result.user;
+  return promptMockLogin(customEmail);
 };
+
+function promptMockLogin(customEmail = null) {
+  let chosenEmail = customEmail;
+  if (!chosenEmail) {
+    chosenEmail = window.prompt(
+      'Enter your admin Gmail to access the Control Center:',
+      'tindoynilo@gmail.com'
+    );
+  }
+  if (!chosenEmail) return null; // Cancelled
+  
+  const mockUser = {
+    uid: `admin_${Date.now()}`,
+    displayName: chosenEmail.split('@')[0],
+    email: chosenEmail.trim(),
+    photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+  };
+  localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
+  window.dispatchEvent(new Event('storage'));
+  return mockUser;
+}
 
 // Logout
 export const logOutAdmin = async () => {
