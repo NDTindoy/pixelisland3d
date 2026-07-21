@@ -3,6 +3,7 @@ import {
   getAuth, 
   GoogleAuthProvider, 
   signInWithPopup, 
+  signInWithRedirect,
   signOut, 
   onAuthStateChanged 
 } from 'firebase/auth';
@@ -22,7 +23,7 @@ import emailjs from '@emailjs/browser';
 
 // Firebase configuration from environment variables (with default fallback for pixelisland3d project)
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCf6vFuz1aOpeMxBNsCZ94NQe6_HqYy5yQ",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCf6vFUz1aOpeMxBNsCZ94NQe6_HqYy5yQ",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "pixelisland3d.firebaseapp.com",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "pixelisland3d",
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "pixelisland3d.firebasestorage.app",
@@ -74,54 +75,30 @@ export const isEmailAuthorized = (email) => {
   return whitelist.includes(email.toLowerCase());
 };
 
-// Direct Admin Email Login (Bypasses browser popup blockers)
-export const signInWithAdminEmail = async (email = 'tindoynilo@gmail.com') => {
-  const cleanEmail = email.trim().toLowerCase();
-  const mockUser = {
-    uid: `admin_${Date.now()}`,
-    displayName: cleanEmail.split('@')[0],
-    email: cleanEmail,
-    photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-  };
-  localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
-  window.dispatchEvent(new Event('storage'));
-  return mockUser;
-};
-
-// Sign in with Google (with graceful fallback if Firebase Auth is uninitialized or blocked by browser)
-export const signInWithGoogle = async (customEmail = null) => {
+// Sign in with Google (Popup with Redirect fallback)
+export const signInWithGoogle = async () => {
   if (isFirebaseConfigured && auth) {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
     } catch (error) {
-      console.warn('Firebase popup error, falling back to instant admin login:', error);
-      return signInWithAdminEmail(customEmail || 'tindoynilo@gmail.com');
+      console.warn('Popup login failed or closed, switching to Google redirect login:', error);
+      await signInWithRedirect(auth, googleProvider);
+      return null;
     }
+  } else {
+    // If env keys are missing locally, provide seamless login for whitelisted admin email
+    const mockUser = {
+      uid: `admin_${Date.now()}`,
+      displayName: 'Admin User',
+      email: getWhitelistedEmails()[0] || 'tindoynilo@gmail.com',
+      photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    };
+    localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
+    window.dispatchEvent(new Event('storage'));
+    return mockUser;
   }
-  return signInWithAdminEmail(customEmail || 'tindoynilo@gmail.com');
 };
-
-function promptMockLogin(customEmail = null) {
-  let chosenEmail = customEmail;
-  if (!chosenEmail) {
-    chosenEmail = window.prompt(
-      'Enter your admin Gmail to access the Control Center:',
-      'tindoynilo@gmail.com'
-    );
-  }
-  if (!chosenEmail) return null; // Cancelled
-  
-  const mockUser = {
-    uid: `admin_${Date.now()}`,
-    displayName: chosenEmail.split('@')[0],
-    email: chosenEmail.trim(),
-    photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-  };
-  localStorage.setItem('pixel_admin_demo_user', JSON.stringify(mockUser));
-  window.dispatchEvent(new Event('storage'));
-  return mockUser;
-}
 
 // Logout
 export const logOutAdmin = async () => {
