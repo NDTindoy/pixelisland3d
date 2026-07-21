@@ -161,14 +161,20 @@ export const submitInquiry = async (formData) => {
 
   if (isFirebaseConfigured && db) {
     try {
-      const docRef = await addDoc(collection(db, 'inquiries'), {
+      const addDocPromise = addDoc(collection(db, 'inquiries'), {
         ...formData,
         status: 'new',
         createdAt: serverTimestamp()
       });
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Firestore write timeout')), 3000)
+      );
+
+      const docRef = await Promise.race([addDocPromise, timeoutPromise]);
       firestoreId = docRef.id;
     } catch (err) {
-      console.error('Error writing to Firestore, saving locally:', err);
+      console.warn('Firestore write timed out or blocked, saved locally:', err);
     }
   }
 
@@ -177,8 +183,14 @@ export const submitInquiry = async (formData) => {
   localList.unshift({ ...newInquiry, id: firestoreId || newInquiry.id });
   saveLocalInquiries(localList);
 
-  // Trigger EmailJS dispatch
-  await sendInquiryEmailNotification(formData);
+  // Trigger EmailJS dispatch (with fast timeout protection)
+  try {
+    const emailPromise = sendInquiryEmailNotification(formData);
+    const emailTimeout = new Promise((res) => setTimeout(() => res({ timeout: true }), 3000));
+    await Promise.race([emailPromise, emailTimeout]);
+  } catch (e) {
+    console.warn('Email dispatch warning:', e);
+  }
 
   return firestoreId || newInquiry.id;
 };
