@@ -1,0 +1,202 @@
+/* ---------------------------------------------------------------------------
+   Dark-theme overrides for the vendored scroll-world engine.
+
+   The engine's own CSS assumes a LIGHT page (it hardcodes `#fff` pill
+   backgrounds and paints buttons as `color:#fff` on `background:var(--sw-ink)`).
+   On this site --sw-ink IS white, so those buttons render white-on-white and the
+   frosted pills turn into solid white blocks.
+
+   These rules live here, scoped under .sw-root, instead of in the vendored file
+   so src/lib/scrub-engine.js stays a clean copy of upstream.
+   --------------------------------------------------------------------------- */
+
+/* Buttons: gold fill with dark text (the site's .btn-primary language). */
+.sw-root .sw-btn--primary,
+.sw-root .sw-topcta {
+  color: #0A0A0A;
+  background: var(--sw-accent);
+}
+.sw-root .sw-btn--primary:hover,
+.sw-root .sw-topcta:hover {
+  background: #e0b83e;
+}
+
+/* Ghost button: readable outline on dark footage. */
+.sw-root .sw-btn--ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+}
+.sw-root .sw-btn--ghost:hover {
+  border-color: var(--sw-accent);
+  color: var(--sw-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Section nav: separate the four labels from each other
+
+   The engine ships the nav as one continuous pill with the items butted
+   together inside it, so "Vision / The Site / Engineering / The Result" read as
+   a single run of text. Drop the shared container and give each label its own
+   dark, blurred, gold-hairline pill with real space between them.
+   --------------------------------------------------------------------------- */
+.sw-root .sw-nav {
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  padding: 0;
+  gap: clamp(6px, 0.9vw, 12px);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.sw-root .sw-nav__item {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(10, 10, 10, 0.72);
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+.sw-root .sw-nav__item:hover {
+  color: #fff;
+  border-color: rgba(212, 175, 55, 0.7);
+  background: rgba(10, 10, 10, 0.85);
+}
+
+/* CTA is already a solid gold fill; the shadow lifts it off the footage. */
+.sw-root .sw-topcta {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(212, 175, 55, 0.9);
+}
+
+.sw-root .sw-nav__item.is-active {
+  color: #0A0A0A;
+  background: var(--sw-accent);
+  border-color: var(--sw-accent);
+  text-shadow: none;
+}
+.sw-root .sw-route__label {
+  color: #fff;
+  background: rgba(10, 10, 10, 0.72);
+  border-color: rgba(212, 175, 55, 0.22);
+}
+
+/* The engine paints the topbar above the video via `z-index: 50`. Do NOT strip
+   that: `position: fixed` makes the topbar its own stacking context, so a
+   z-index on its children can't lift them past the stage — the whole bar has to
+   sit above `.sw-stage` (z-index 10) or the logo and nav vanish behind the video. */
+
+/* Image logo styling */
+.sw-root .sw-brand__logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Logo_C_Alpha.png already has a real alpha channel (black keyed out with
+   Pillow), so no mix-blend-mode hack is needed — that approach could never work
+   across the topbar/stage stacking-context boundary anyway. */
+.sw-root .sw-brand {
+  background: transparent;
+  padding: 8px;
+  display: inline-block;
+}
+
+/* Tailwind Preflight sets `img, video { height: auto }`, which collapses the
+   scene video to its 16:9 intrinsic height (e.g. 219px inside an 844px phone
+   viewport) and leaves black below it. Force it to fill the scene box so
+   `object-fit: cover` can actually crop-to-fill at any aspect ratio, portrait
+   phones included. */
+.sw-root .sw-scene__video,
+.sw-root .sw-scene__still {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  object-fit: cover;
+  object-position: center center;
+  background: var(--sw-bg);
+}
+
+/* Restore proper alignment: Center-Left for the copy block across all devices */
+.sw-root .sw-copy {
+  left: clamp(20px, 8vw, 100px) !important;
+  transform: translateY(-50%) !important;
+  width: 90% !important;
+  max-width: 650px !important;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: opacity 0.3s;
+}
+
+/* Copy sits over dark video, so the engine's light-bg text shadows do nothing.
+   Swap in a real dark scrim for legibility. Scale up font-sizes for emphasis based on feedback. */
+.sw-root .sw-copy__eyebrow {
+  font-size: clamp(1.4rem, 3vw, 2rem) !important;
+  margin-bottom: 8px;
+}
+.sw-root .sw-copy__title {
+  font-size: clamp(1.8rem, 4vw, 3rem) !important;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+.sw-root .sw-copy__body {
+  font-size: clamp(1.2rem, 2vw, 1.5rem) !important;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+.sw-root .sw-copy__tags {
+  justify-content: flex-start;
+}
+.sw-root .sw-copy__tags li {
+  color: var(--sw-accent);
+  background: rgba(10, 10, 10, 0.55);
+  border-color: rgba(212, 175, 55, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+/* The engine's left-edge gradient is built from --sw-bg at full opacity, which
+   over dark footage reads as a hard black slab. Soften it to a gradient scrim. */
+.sw-root .sw-copylayer::before {
+  background: linear-gradient(
+    90deg,
+    rgba(10, 10, 10, 0.92) 0%,
+    rgba(10, 10, 10, 0.75) 30%,
+    rgba(10, 10, 10, 0.35) 62%,
+    transparent 100%
+  );
+}
+
+/* Pin the scroll hint so it never fades out as the user scrolls downwards. */
+.sw-root .sw-hint {
+  opacity: 1 !important;
+  bottom: clamp(20px, 5vh, 40px) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile Resizing Constraints
+   Ensure the top 4 navigation buttons are visible on mobile and gracefully wrap
+   --------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .sw-root .sw-nav {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  /* Individually-pilled items cost more horizontal room than the engine's
+     single shared pill did, so tighten them to keep all four on two rows. */
+  .sw-root .sw-nav__item {
+    padding: 6px 12px;
+    font-size: 0.76rem;
+  }
+  .sw-root .sw-topbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px;
+    gap: 12px;
+  }
+}

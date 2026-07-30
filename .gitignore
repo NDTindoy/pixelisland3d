@@ -24,3 +24,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Landing hero video master -- kept local; only the encoded clips under
+# public/assets/landing are committed (see scripts/encode-landing.sh).
+LandingPage_Hero_Video/

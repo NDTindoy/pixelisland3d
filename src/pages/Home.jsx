@@ -1,4 +1,4 @@
-import { ArrowRight, Globe, Image as ImageIcon, Ruler, Trophy, Maximize2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Globe, Image as ImageIcon, Ruler, Trophy, Maximize2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
@@ -17,6 +17,16 @@ const Home = () => {
 
   return (
     <div className="flex flex-col w-full">
+      {/* Return to the scroll-scrubbed flythrough at "/". Fixed just under the
+          81px Navbar so it stays reachable anywhere on the page. */}
+      <Link
+        to="/"
+        className="fixed top-[93px] left-4 md:left-6 z-40 flex items-center gap-2 rounded-full border border-gold/40 bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur-md transition-colors hover:border-gold hover:text-gold"
+      >
+        <ArrowLeft size={16} />
+        Enter the Island
+      </Link>
+
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center px-6">
         <div className="absolute inset-0 z-0">
