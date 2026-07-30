@@ -178,25 +178,97 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Mobile Resizing Constraints
-   Ensure the top 4 navigation buttons are visible on mobile and gracefully wrap
+   Mobile / Android portrait
+
+   Desktop is signed off, so everything here is scoped to <=860px. Three of the
+   fixes below undo *our own* unlayered overrides above, which is why the engine's
+   built-in mobile block couldn't correct them: the engine ships its CSS inside a
+   cascade layer, so any unlayered rule in this file beats it regardless of
+   media query or specificity.
    --------------------------------------------------------------------------- */
 @media (max-width: 860px) {
-  .sw-root .sw-nav {
-    display: flex !important;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  /* Individually-pilled items cost more horizontal room than the engine's
-     single shared pill did, so tighten them to keep all four on two rows. */
-  .sw-root .sw-nav__item {
-    padding: 6px 12px;
-    font-size: 0.76rem;
-  }
+  /* Logo left, CTA right, nav wrapped onto its own row underneath. */
   .sw-root .sw-topbar {
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .sw-root .sw-brand {
+    padding: 0;
+    margin-right: auto;
+  }
+  /* 80px is a desktop size; on a 412px-wide phone it eats a third of the bar. */
+  .sw-root .sw-brand__logo {
+    height: 40px;
+  }
+  .sw-root .sw-nav {
+    display: flex !important;
+    flex-basis: 100%;
+    flex-wrap: wrap;
     justify-content: center;
-    padding: 16px;
-    gap: 12px;
+    gap: 6px;
+  }
+  /* Individually-pilled items cost more horizontal room than the engine's
+     single shared pill did, so tighten them to keep all four on one row. */
+  .sw-root .sw-nav__item {
+    padding: 5px 10px;
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+  }
+  .sw-root .sw-topcta {
+    padding: 8px 16px;
+    font-size: 0.76rem;
+  }
+
+  /* The horizontal scrim above is built for a left-aligned desktop copy block.
+     The engine re-lays it out for phones (full width, bottom 60%) but cannot
+     replace the 90deg angle, so it rendered as a dark band across mid-screen.
+     Restore the vertical bottom-up scrim the mobile layout expects. */
+  .sw-root .sw-copylayer::before {
+    width: 100%;
+    height: 62%;
+    top: auto;
+    bottom: 0;
+    background: linear-gradient(
+      0deg,
+      rgba(10, 10, 10, 0.92) 8%,
+      rgba(10, 10, 10, 0.62) 46%,
+      transparent 100%
+    );
+  }
+
+  /* Same story as the scrim: our centre-left desktop rules carry !important, so
+     they were also beating the engine's mobile layout and pinning the copy to
+     mid-screen. Hand it back to the bottom so it sits inside the scrim above,
+     clear of both the wrapped topbar and the hint. */
+  .sw-root .sw-copy {
+    left: clamp(16px, 5vw, 64px) !important;
+    right: clamp(16px, 5vw, 64px) !important;
+    top: auto !important;
+    bottom: calc(clamp(66px, 15dvh, 120px) + env(safe-area-inset-bottom)) !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: 560px !important;
+  }
+  .sw-root .sw-copy__eyebrow {
+    font-size: clamp(0.95rem, 3.4vw, 1.2rem) !important;
+  }
+  .sw-root .sw-copy__title {
+    font-size: clamp(1.55rem, 6.4vw, 2.2rem) !important;
+  }
+  .sw-root .sw-copy__body {
+    font-size: clamp(0.92rem, 3.5vw, 1.05rem) !important;
+  }
+
+  .sw-root .sw-hint {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    gap: 6px;
+  }
+  .sw-root .sw-hint i {
+    width: 16px;
+    height: 25px;
   }
 }
